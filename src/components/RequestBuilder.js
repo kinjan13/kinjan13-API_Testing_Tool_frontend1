@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import HeaderEditor from "./HeaderEditor";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
+import { beautifyJSON, minifyJSON } from "../utils/jsonTools";
 
 function RequestBuilder({ setApiResponse }) {
   const [url, setUrl] = useState("");
@@ -173,6 +174,76 @@ function RequestBuilder({ setApiResponse }) {
         disabled={method === "GET"}
       />
 
+      {/* JSON Tools */}
+      <div style={{ display: "flex", gap: "10px", marginBottom: "10px", marginTop: "10px" }}>
+        <button
+          onClick={() => setBody(beautifyJSON(body))}
+          style={{
+            background: "green",
+            color: "white",
+            padding: "6px 12px",
+            borderRadius: "5px",
+            border: "none",
+            cursor: "pointer",
+          }}
+        >
+          Beautify JSON
+        </button>
+
+        <button
+          onClick={() => setBody(minifyJSON(body))}
+          style={{
+            background: "orange",
+            color: "white",
+            padding: "6px 12px",
+            borderRadius: "5px",
+            border: "none",
+            cursor: "pointer",
+          }}
+        >
+          Minify JSON
+        </button>
+
+        <button
+          onClick={() => setBody("")}
+          style={{
+            background: "darkred",
+            color: "white",
+            padding: "6px 12px",
+            borderRadius: "5px",
+            border: "none",
+            cursor: "pointer",
+          }}
+        >
+          Clear
+        </button>
+      </div>
+
+      {/* Copy Request Button */}
+      <button
+        onClick={() => {
+          const req = {
+            url,
+            method,
+            headers,
+            body,
+          };
+          navigator.clipboard.writeText(JSON.stringify(req, null, 2));
+          alert("Request copied to clipboard!");
+        }}
+        style={{
+          padding: "6px 12px",
+          background: "purple",
+          color: "white",
+          border: "none",
+          borderRadius: "5px",
+          marginBottom: "10px",
+          cursor: "pointer",
+        }}
+      >
+        Copy Request
+      </button>
+
       {/* Send Button */}
       <button
         disabled={loading}
@@ -216,4 +287,4 @@ function RequestBuilder({ setApiResponse }) {
   );
 }
 
-export default RequestBuilder;
+export default React.memo(RequestBuilder);

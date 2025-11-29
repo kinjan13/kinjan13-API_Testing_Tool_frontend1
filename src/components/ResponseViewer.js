@@ -1,4 +1,6 @@
 import React from "react";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 function ResponseViewer({ apiResponse }) {
   if (!apiResponse) return <p>No response yet.</p>;
@@ -38,21 +40,35 @@ function ResponseViewer({ apiResponse }) {
 
       <p><strong>Response Time:</strong> {apiResponse.time} ms</p>
 
-      <h4>Headers:</h4>
-      <pre style={{ background: "#f0f0f0", padding: "10px" }}>
-        {JSON.stringify(apiResponse.headers, null, 2)}
-      </pre>
+      <div>
+        <details>
+          <summary style={{ cursor: "pointer", fontSize: "16px", fontWeight: "bold", marginBottom: "10px" }}>
+            Headers
+          </summary>
 
-      <h4>Response Body:</h4>
-      <pre style={{ background: "#222", color: "lightgreen", padding: "15px" }}>
-        {JSON.stringify(apiResponse.data, null, 2)}
-      </pre>
+          <SyntaxHighlighter language="json" style={oneDark}>
+            {JSON.stringify(apiResponse.headers, null, 2)}
+          </SyntaxHighlighter>
+        </details>
+      </div>
 
-      <button onClick={copyToClipboard} style={{ padding: "8px 16px", background: "purple", color: "white", borderRadius: "5px", border: "none", marginRight: "10px" }}>Copy Response</button>
+      <div style={{ marginTop: "15px" }}>
+        <details open>
+          <summary style={{ cursor: "pointer", fontSize: "16px", fontWeight: "bold", marginBottom: "10px" }}>
+            Response Body
+          </summary>
 
-      <button onClick={clearResponse} style={{ padding: "8px 16px", background: "darkred", color: "white", borderRadius: "5px", border: "none" }}>Clear</button>
+          <SyntaxHighlighter language="json" style={oneDark}>
+            {JSON.stringify(apiResponse.data, null, 2)}
+          </SyntaxHighlighter>
+        </details>
+      </div>
+
+      <button onClick={copyToClipboard} style={{ padding: "8px 16px", background: "purple", color: "white", borderRadius: "5px", border: "none", marginRight: "10px", marginTop: "15px" }}>Copy Response</button>
+
+      <button onClick={clearResponse} style={{ padding: "8px 16px", background: "darkred", color: "white", borderRadius: "5px", border: "none", marginTop: "15px" }}>Clear</button>
     </div>
   );
 }
 
-export default ResponseViewer;
+export default React.memo(ResponseViewer);
