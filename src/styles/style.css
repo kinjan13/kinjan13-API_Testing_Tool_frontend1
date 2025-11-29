@@ -135,6 +135,32 @@ body {
   margin: 0;
   padding: 24px;
   flex: 1;
+
+  /* Home Container */
+  .home-container {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .home-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .home-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+    letter-spacing: -0.5px;
+  }
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -181,6 +207,7 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  margin: 20px 0; /* space from top and bottom */
 }
 
 .right-panel {
@@ -193,6 +220,34 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  margin: 20px 0; /* space from top and bottom */
+}
+
+.right-panel > * {
+  border-radius: 8px;
+}
+
+/* Inner scrollable content for right panel */
+.right-panel > div:nth-child(2) {
+  overflow: hidden;
+}
+
+.right-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.right-panel::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.right-panel::-webkit-scrollbar-thumb {
+  background: #667eea;
+  border-radius: 10px;
+}
+
+.right-panel::-webkit-scrollbar-thumb:hover {
+  background: #764ba2;
 }
 
 /* Panel Headers */
@@ -203,6 +258,11 @@ body {
   margin-bottom: 20px;
   padding-bottom: 12px;
   border-bottom: 2px solid #667eea;
+
+/* Hide panel headers in home page */
+.home-container .panel-header {
+  display: none;
+}
 }
 
 /* Form Elements */
@@ -381,6 +441,10 @@ body.dark-mode .section {
   background: #2d3748;
   color: #e2e8f0;
   border-color: #4a5568;
+
+body.dark-mode .home-header h1 {
+  color: #ffffff;
+}
 }
 
 body.dark-mode .panel-header {

@@ -219,8 +219,9 @@ function RequestBuilder({ setApiResponse }) {
       >
         📋 Copy Request
       </button>
+      </div>
 
-      {/* Send Button */}
+      {/* Send Button - Outside Scrollable Area */}
       <button
         disabled={loading}
         className="btn-primary"
@@ -230,9 +231,7 @@ function RequestBuilder({ setApiResponse }) {
           fontSize: "14px",
           fontWeight: "600",
           flexShrink: 0,
-          position: "sticky",
-          bottom: "0px",
-          marginTop: "auto"
+          marginBottom: "0px"
         }}
         onClick={sendRequest}
       >
@@ -241,12 +240,11 @@ function RequestBuilder({ setApiResponse }) {
 
       {/* Loading Spinner */}
       {loading && (
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", color: "#667eea", flexShrink: 0, paddingTop: "8px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", color: "#667eea", flexShrink: 0, paddingTop: "8px", paddingBottom: "8px" }}>
           <div className="spinner"></div>
           <span>Processing request...</span>
         </div>
       )}
-      </div>
 
       <style>{`
         .spinner {

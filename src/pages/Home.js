@@ -7,15 +7,17 @@ function Home() {
   const [apiResponse, setApiResponse] = useState(null);
 
   return (
-    <div className="container">
+    <div className="home-container">
+      <div className="home-header">
+        
+      </div>
+      
       <div className="api-grid">
         <div className="left-panel">
-          <div className="panel-header">📝 Request Builder</div>
           <RequestBuilder setApiResponse={setApiResponse} />
         </div>
 
         <div className="right-panel">
-          <div className="panel-header">📊 Response Viewer</div>
           <ResponseViewer apiResponse={apiResponse} />
         </div>
       </div>
