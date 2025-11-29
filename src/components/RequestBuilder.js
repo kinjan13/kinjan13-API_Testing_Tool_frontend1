@@ -175,47 +175,29 @@ function RequestBuilder({ setApiResponse }) {
       />
 
       {/* JSON Tools */}
-      <div style={{ display: "flex", gap: "10px", marginBottom: "10px", marginTop: "10px" }}>
+      <div style={{ display: "flex", gap: "10px", marginBottom: "16px", marginTop: "16px", flexWrap: "wrap" }}>
         <button
           onClick={() => setBody(beautifyJSON(body))}
-          style={{
-            background: "green",
-            color: "white",
-            padding: "6px 12px",
-            borderRadius: "5px",
-            border: "none",
-            cursor: "pointer",
-          }}
+          className="btn-primary"
+          style={{ flex: 1, minWidth: "140px" }}
         >
-          Beautify JSON
+          ✨ Beautify
         </button>
 
         <button
           onClick={() => setBody(minifyJSON(body))}
-          style={{
-            background: "orange",
-            color: "white",
-            padding: "6px 12px",
-            borderRadius: "5px",
-            border: "none",
-            cursor: "pointer",
-          }}
+          className="btn-secondary"
+          style={{ flex: 1, minWidth: "140px" }}
         >
-          Minify JSON
+          🔨 Minify
         </button>
 
         <button
           onClick={() => setBody("")}
-          style={{
-            background: "darkred",
-            color: "white",
-            padding: "6px 12px",
-            borderRadius: "5px",
-            border: "none",
-            cursor: "pointer",
-          }}
+          className="btn-danger"
+          style={{ flex: 1, minWidth: "140px" }}
         >
-          Clear
+          🗑️ Clear
         </button>
       </div>
 
@@ -231,41 +213,33 @@ function RequestBuilder({ setApiResponse }) {
           navigator.clipboard.writeText(JSON.stringify(req, null, 2));
           alert("Request copied to clipboard!");
         }}
-        style={{
-          padding: "6px 12px",
-          background: "purple",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          marginBottom: "10px",
-          cursor: "pointer",
-        }}
+        className="btn-secondary"
+        style={{ width: "100%", marginBottom: "16px" }}
       >
-        Copy Request
+        📋 Copy Request
       </button>
 
       {/* Send Button */}
       <button
         disabled={loading}
+        className="btn-primary"
         style={{
-          marginTop: "15px",
-          padding: "10px 20px",
-          background: loading ? "gray" : "blue",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          cursor: loading ? "not-allowed" : "pointer",
+          width: "100%",
+          padding: "12px",
+          fontSize: "14px",
+          fontWeight: "600",
+          marginBottom: "12px"
         }}
         onClick={sendRequest}
       >
-        {loading ? "Sending..." : "Send Request"}
+        {loading ? "🚀 Sending..." : "🚀 Send Request"}
       </button>
 
       {/* Loading Spinner */}
       {loading && (
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "10px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "10px", color: "#667eea" }}>
           <div className="spinner"></div>
-          <span style={{ color: "blue" }}>Sending request...</span>
+          <span>Processing request...</span>
         </div>
       )}
 

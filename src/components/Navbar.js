@@ -18,69 +18,47 @@ function Navbar() {
   };
 
   return (
-    <nav
-      style={{
-        background: "#222",
-        padding: "10px 20px",
-        marginBottom: "20px",
-        color: "white",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-      }}
-    >
-      <div>
-        <Link to="/" style={{ color: "white", marginRight: "15px" }}>
-          Home
-        </Link>
-
-        {user && (
-          <Link to="/history" style={{ color: "white", marginRight: "15px" }}>
-            History
+    <nav className="navbar">
+      <div className="navbar-content">
+        <div className="navbar-left">
+          <Link to="/" className="navbar-logo">
+            API Testing Tool
           </Link>
-        )}
-      </div>
+          <div className="navbar-links">
+            <Link to="/" className="navbar-link">
+              Home
+            </Link>
+            {user && (
+              <Link to="/history" className="navbar-link">
+                History
+              </Link>
+            )}
+          </div>
+        </div>
 
-      <div>
-        {!user ? (
-          <>
-            <Link to="/login" style={{ color: "white", marginRight: "15px" }}>
-              Login
-            </Link>
-            <Link to="/signup" style={{ color: "white", marginRight: "15px" }}>
-              Signup
-            </Link>
-          </>
-        ) : (
+        <div className="navbar-right">
+          {!user ? (
+            <>
+              <Link to="/login" className="navbar-button">
+                Login
+              </Link>
+              <Link to="/signup" className="navbar-button">
+                Signup
+              </Link>
+            </>
+          ) : (
+            <button className="navbar-button navbar-logout" onClick={handleLogout}>
+              Logout
+            </button>
+          )}
+
           <button
-            style={{
-              padding: "6px 12px",
-              background: "darkred",
-              color: "white",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-              marginRight: "15px",
-            }}
-            onClick={handleLogout}
+            onClick={toggleTheme}
+            className="navbar-button navbar-theme"
           >
-            Logout
+            {dark ? "☀️ Light" : "🌙 Dark"}
           </button>
-        )}
-
-        <button
-          onClick={toggleTheme}
-          style={{
-            padding: "6px 12px",
-            background: "gray",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          {dark ? "Light" : "Dark"}
-        </button>
+        </div>
       </div>
     </nav>
   );

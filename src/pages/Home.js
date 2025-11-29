@@ -8,14 +8,14 @@ function Home() {
 
   return (
     <div className="container">
-      <h1>API Testing Tool</h1>
-
       <div className="api-grid">
         <div className="left-panel">
+          <div className="panel-header">📝 Request Builder</div>
           <RequestBuilder setApiResponse={setApiResponse} />
         </div>
 
         <div className="right-panel">
+          <div className="panel-header">📊 Response Viewer</div>
           <ResponseViewer apiResponse={apiResponse} />
         </div>
       </div>
