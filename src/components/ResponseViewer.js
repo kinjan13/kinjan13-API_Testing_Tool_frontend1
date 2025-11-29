@@ -134,7 +134,12 @@ function ResponseViewer({ apiResponse }) {
         display: "flex",
         gap: "10px",
         justifyContent: "center",
-        flexShrink: 0
+        flexShrink: 0,
+        position: "sticky",
+        bottom: "0px",
+        background: "white",
+        padding: "12px 0px",
+        borderTop: "1px solid #e0e0e0"
       }}>
         <button
           onClick={copyToClipboard}

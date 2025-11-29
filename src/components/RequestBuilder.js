@@ -115,8 +115,8 @@ function RequestBuilder({ setApiResponse }) {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100%", gap: "12px" }}>
-      <div style={{ flex: 1, overflow: "auto", minHeight: 0 }}>
+    <div style={{ display: "flex", flexDirection: "column", height: "100%", gap: "0px" }}>
+      <div style={{ flex: 1, overflow: "auto", minHeight: 0, paddingBottom: "12px" }}>
         {/* URL Input */}
         <label><strong>Request URL:</strong></label>
         <input
@@ -229,8 +229,10 @@ function RequestBuilder({ setApiResponse }) {
           padding: "12px",
           fontSize: "14px",
           fontWeight: "600",
-          marginBottom: "12px",
-          flexShrink: 0
+          flexShrink: 0,
+          position: "sticky",
+          bottom: "0px",
+          marginTop: "auto"
         }}
         onClick={sendRequest}
       >
@@ -239,7 +241,7 @@ function RequestBuilder({ setApiResponse }) {
 
       {/* Loading Spinner */}
       {loading && (
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", color: "#667eea", flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", color: "#667eea", flexShrink: 0, paddingTop: "8px" }}>
           <div className="spinner"></div>
           <span>Processing request...</span>
         </div>
