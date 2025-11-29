@@ -47,13 +47,13 @@ function ResponseViewer({ apiResponse }) {
   };
 
   return (
-    <div>
+    <div style={{ display: "flex", flexDirection: "column", height: "100%", gap: "16px" }}>
       <div style={{
         background: "#f9f9f9",
         padding: "16px",
         borderRadius: "8px",
-        marginBottom: "20px",
-        border: "1px solid #e0e0e0"
+        border: "1px solid #e0e0e0",
+        flexShrink: 0
       }}>
         <div style={{
           display: "flex",
@@ -84,68 +84,71 @@ function ResponseViewer({ apiResponse }) {
         </div>
       </div>
 
-      <div style={{ marginBottom: "20px" }}>
-        <details>
-          <summary style={{
-            cursor: "pointer",
-            fontSize: "14px",
-            fontWeight: "600",
-            marginBottom: "12px",
-            padding: "12px",
-            background: "#f5f5f5",
-            borderRadius: "6px"
-          }}>
-             Headers
-          </summary>
+      <div style={{ flex: 1, overflow: "auto", minHeight: 0 }}>
+        <div style={{ marginBottom: "20px" }}>
+          <details>
+            <summary style={{
+              cursor: "pointer",
+              fontSize: "14px",
+              fontWeight: "600",
+              marginBottom: "12px",
+              padding: "12px",
+              background: "#f5f5f5",
+              borderRadius: "6px"
+            }}>
+              📋 Headers
+            </summary>
 
-          <div style={{ marginTop: "12px", borderRadius: "6px", overflow: "hidden" }}>
-            <SyntaxHighlighter language="json" style={oneDark}>
-              {JSON.stringify(apiResponse.headers, null, 2)}
-            </SyntaxHighlighter>
-          </div>
-        </details>
-      </div>
+            <div style={{ marginTop: "12px", borderRadius: "6px", overflow: "hidden" }}>
+              <SyntaxHighlighter language="json" style={oneDark}>
+                {JSON.stringify(apiResponse.headers, null, 2)}
+              </SyntaxHighlighter>
+            </div>
+          </details>
+        </div>
 
-      <div style={{ marginBottom: "20px" }}>
-        <details open>
-          <summary style={{
-            cursor: "pointer",
-            fontSize: "14px",
-            fontWeight: "600",
-            marginBottom: "12px",
-            padding: "12px",
-            background: "#f5f5f5",
-            borderRadius: "6px"
-          }}>
-             Response Body
-          </summary>
+        <div style={{ marginBottom: "20px" }}>
+          <details open>
+            <summary style={{
+              cursor: "pointer",
+              fontSize: "14px",
+              fontWeight: "600",
+              marginBottom: "12px",
+              padding: "12px",
+              background: "#f5f5f5",
+              borderRadius: "6px"
+            }}>
+              📄 Response Body
+            </summary>
 
-          <div style={{ marginTop: "12px", borderRadius: "6px", overflow: "hidden" }}>
-            <SyntaxHighlighter language="json" style={oneDark}>
-              {JSON.stringify(apiResponse.data, null, 2)}
-            </SyntaxHighlighter>
-          </div>
-        </details>
+            <div style={{ marginTop: "12px", borderRadius: "6px", overflow: "hidden" }}>
+              <SyntaxHighlighter language="json" style={oneDark}>
+                {JSON.stringify(apiResponse.data, null, 2)}
+              </SyntaxHighlighter>
+            </div>
+          </details>
+        </div>
       </div>
 
       <div style={{
         display: "flex",
         gap: "10px",
-        justifyContent: "center"
+        justifyContent: "center",
+        flexShrink: 0
       }}>
         <button
           onClick={copyToClipboard}
           className="btn-primary"
           style={{ flex: 1 }}
         >
-           Copy Response
+          📋 Copy Response
         </button>
         <button
           onClick={clearResponse}
           className="btn-secondary"
           style={{ flex: 1 }}
         >
-           Clear
+          🔄 Clear
         </button>
       </div>
     </div>
