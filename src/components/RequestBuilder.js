@@ -9,7 +9,6 @@ function RequestBuilder({ setApiResponse }) {
   const [body, setBody] = useState("");
   const [headers, setHeaders] = useState([{ key: "", value: "" }]);
   const [loading, setLoading] = useState(false);
-  const [history, setHistory] = useState([]);
   const { user } = useContext(AuthContext);
 
   // Auto-fill from localStorage when history entry is selected
@@ -36,18 +35,6 @@ function RequestBuilder({ setApiResponse }) {
     } catch {
       return false;
     }
-  };
-
-  const saveToHistory = () => {
-    const entry = {
-      url,
-      method,
-      body,
-      headers,
-      time: new Date().toLocaleString(),
-    };
-
-    setHistory((prev) => [entry, ...prev]);
   };
 
   const sendRequest = async () => {
@@ -84,7 +71,7 @@ function RequestBuilder({ setApiResponse }) {
 
       const start = performance.now();
 
-      const response = await axios.post("http://localhost:5000/api/test-request", {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/test-request`, {
         url,
         method,
         headers: headersObj,
@@ -100,11 +87,9 @@ function RequestBuilder({ setApiResponse }) {
         time: (end - start).toFixed(2),
       });
 
-      saveToHistory();
-
       // Save to backend history if user is logged in
       if (user) {
-        await axios.post("http://localhost:5000/history/save", {
+        await axios.post(`${process.env.REACT_APP_API_URL}/history/save`, {
           url,
           method,
           headers,
@@ -123,8 +108,6 @@ function RequestBuilder({ setApiResponse }) {
             ? "Request timed out"
             : "Network Error: Unable to reach server",
       });
-
-      saveToHistory();
     }
 
     setLoading(false); // Stop loading
