@@ -10,9 +10,7 @@ function History() {
     if (!user) return;
 
     const load = async () => {
-      const res = await axios.get(
-        `${process.env.REACT_APP_API_URL}/history/get?user_id=${user.id}`
-      );
+      const res = await axios.get(`/history/get?user_id=${user.id}`);
       setHistory(res.data);
     };
 

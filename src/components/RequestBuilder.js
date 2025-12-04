@@ -72,7 +72,7 @@ function RequestBuilder({ setApiResponse }) {
 
       const start = performance.now();
 
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/test-request`, {
+      const response = await axios.post(`/api/test-request`, {
         url,
         method,
         headers: headersObj,
@@ -90,7 +90,7 @@ function RequestBuilder({ setApiResponse }) {
 
       // Save to backend history if user is logged in
       if (user) {
-        await axios.post(`${process.env.REACT_APP_API_URL}/history/save`, {
+        await axios.post(`/history/save`, {
           url,
           method,
           headers,

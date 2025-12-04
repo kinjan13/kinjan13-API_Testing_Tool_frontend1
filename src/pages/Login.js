@@ -41,10 +41,7 @@ function Login() {
 
     try {
       setLoading(true);
-      const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/auth/login`,
-        { email, password }
-      );
+      const res = await axios.post("/auth/login", { email, password });
 
       // Debug: log full response when running locally
       // eslint-disable-next-line no-console
