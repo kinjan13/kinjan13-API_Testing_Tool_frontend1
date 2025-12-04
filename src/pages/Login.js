@@ -47,14 +47,13 @@ function Login() {
       // eslint-disable-next-line no-console
       console.log("axios baseURL (before login):", axios.defaults.baseURL, "REACT_APP_API_URL:", process.env.REACT_APP_API_URL);
 
-      // Always use explicit REACT_APP_API_URL when available (never fallback to relative paths).
-      // This ensures we call the deployed backend directly and avoid CRA proxy issues.
-      const apiRoot = process.env.REACT_APP_API_URL || "http://localhost:5000";
-      const loginUrl = `${apiRoot.replace(/\/$/, "")}/auth/login`;
+      // Use relative path so CRA dev proxy can forward requests to the backend.
+      // This bypasses CORS issues by making the browser think the API is on the same origin.
+      const loginUrl = "/auth/login";
       setApiDebugUrl(loginUrl);
 
       // eslint-disable-next-line no-console
-      console.log("Sending login request to:", loginUrl);
+      console.log("Sending login request to (relative path via proxy):", loginUrl);
 
       const res = await axios.post(loginUrl, { email, password });
 

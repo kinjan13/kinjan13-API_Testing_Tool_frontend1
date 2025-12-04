@@ -55,9 +55,8 @@ function Signup() {
 
     try {
       setLoading(true);
-      // Use explicit API URL (same pattern as Login.js)
-      const apiRoot = process.env.REACT_APP_API_URL || "http://localhost:5000";
-      const signupUrl = `${apiRoot.replace(/\/$/, "")}/auth/signup`;
+      // Use relative path so CRA dev proxy can forward requests to the backend.
+      const signupUrl = "/auth/signup";
       const res = await axios.post(signupUrl, { email, password });
 
       if (res.data.error) {
