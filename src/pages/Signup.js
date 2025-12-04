@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, Navigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 import "../styles/auth.css";
 
 function Signup() {
@@ -13,6 +14,11 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
+
+  if (user) {
+    return <Navigate to="/" />;
+  }
 
   const validateForm = () => {
     if (!email.trim()) {
