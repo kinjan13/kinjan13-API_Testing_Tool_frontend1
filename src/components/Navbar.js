@@ -7,6 +7,9 @@ function Navbar() {
   const navigate = useNavigate();
   const [dark, setDark] = useState(false);
 
+  // eslint-disable-next-line no-console
+  console.log("Navbar render - user:", user);
+
   const handleLogout = () => {
     logout();
     navigate("/login");

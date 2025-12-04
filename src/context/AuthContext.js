@@ -22,6 +22,8 @@ export function AuthProvider({ children }) {
     if (savedToken) {
       setToken(savedToken);
     }
+    // eslint-disable-next-line no-console
+    console.log("AuthProvider initialized", { savedUser: !!savedUser, savedToken: !!savedToken });
   }, []);
 
   // Keep axios default Authorization header in sync with token
@@ -38,6 +40,8 @@ export function AuthProvider({ children }) {
     setToken(token);
     localStorage.setItem("user", JSON.stringify(userData));
     localStorage.setItem("token", token);
+    // eslint-disable-next-line no-console
+    console.log("Auth login", { user: userData?.email || userData, token: !!token });
   };
 
   const logout = () => {
@@ -45,6 +49,8 @@ export function AuthProvider({ children }) {
     setToken("");
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+    // eslint-disable-next-line no-console
+    console.log("Auth logout: cleared user and token");
   };
 
   return (
