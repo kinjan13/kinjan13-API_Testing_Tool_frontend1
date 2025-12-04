@@ -1,8 +1,8 @@
 import React, { useState, useContext } from "react";
-import axios from "axios";
 import { useNavigate, Link, Navigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { ToastContext } from "../context/ToastContext";
+import apiClient from "../utils/apiClient";
 import "../styles/auth.css";
 
 function Signup() {
@@ -55,9 +55,9 @@ function Signup() {
 
     try {
       setLoading(true);
-      // Use relative path so CRA dev proxy can forward requests to the backend.
+      // Use dedicated apiClient configured with the backend URL
       const signupUrl = "/auth/signup";
-      const res = await axios.post(signupUrl, { email, password });
+      const res = await apiClient.post(signupUrl, { email, password });
 
       if (res.data.error) {
         setError(res.data.message || "Signup failed");

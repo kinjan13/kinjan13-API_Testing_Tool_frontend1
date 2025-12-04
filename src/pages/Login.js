@@ -1,8 +1,8 @@
 import React, { useState, useContext } from "react";
-import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import { ToastContext } from "../context/ToastContext";
 import { useNavigate, Link, Navigate } from "react-router-dom";
+import apiClient from "../utils/apiClient";
 import "../styles/auth.css";
 
 function Login() {
@@ -43,19 +43,15 @@ function Login() {
 
     try {
       setLoading(true);
-      // Debug: show what baseURL axios is using in runtime
+      // Debug: show what API URL is being used
       // eslint-disable-next-line no-console
-      console.log("axios baseURL (before login):", axios.defaults.baseURL, "REACT_APP_API_URL:", process.env.REACT_APP_API_URL);
+      console.log("API URL:", apiClient.defaults.baseURL, "REACT_APP_API_URL:", process.env.REACT_APP_API_URL);
 
-      // Use relative path so CRA dev proxy can forward requests to the backend.
-      // This bypasses CORS issues by making the browser think the API is on the same origin.
+      // Use dedicated apiClient configured with the backend URL
       const loginUrl = "/auth/login";
-      setApiDebugUrl(loginUrl);
+      setApiDebugUrl(`${apiClient.defaults.baseURL}${loginUrl}`);
 
-      // eslint-disable-next-line no-console
-      console.log("Sending login request to (relative path via proxy):", loginUrl);
-
-      const res = await axios.post(loginUrl, { email, password });
+      const res = await apiClient.post(loginUrl, { email, password });
 
       // Debug: log full response when running locally
       // eslint-disable-next-line no-console
