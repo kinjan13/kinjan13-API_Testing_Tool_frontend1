@@ -1,6 +1,7 @@
 {
   "name": "frontend",
   "version": "0.1.0",
+  "proxy": "https://api-testing-tool-backend-tzdy.onrender.com",
   "private": true,
   "homepage": ".",
   "dependencies": {

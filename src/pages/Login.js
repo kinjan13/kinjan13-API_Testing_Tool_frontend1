@@ -46,15 +46,36 @@ function Login() {
         { email, password }
       );
 
-      if (res.data.error) {
-        setError(res.data.message || "Login failed");
+      // Debug: log full response when running locally
+      // eslint-disable-next-line no-console
+      console.log("Login response:", res);
+
+      // Backend may return different shapes. Accept if:
+      // - res.data.success === true OR
+      // - res.data.token exists OR
+      // - no res.data.error flag
+      const data = res.data || {};
+      const token = data.token || data.access_token || data?.data?.token;
+
+      if (data.error) {
+        setError(data.message || "Login failed");
         return;
       }
 
-      login(res.data.user, res.data.token);
+      if (!token) {
+        // If login succeeded but no token provided, show helpful message
+        setError(data.message || "Login succeeded but no token returned from server");
+        return;
+      }
+
+      login(data.user || data.data?.user || {}, token);
       navigate("/");
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed. Please try again.");
+      // Better error messages for debugging
+      // eslint-disable-next-line no-console
+      console.error("Login error:", err.response || err);
+      const serverMessage = err.response?.data?.message || err.response?.data || err.message;
+      setError(serverMessage || "Login failed. Please try again.");
     } finally {
       setLoading(false);
     }
