@@ -10,6 +10,7 @@ const apiClient = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: false, // Don't send cookies; helps avoid CORS preflight
 });
 
 // Add auth token to requests if available
@@ -28,7 +29,7 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-// Log responses for debugging
+// Log responses and handle CORS errors
 apiClient.interceptors.response.use(
   (response) => {
     // eslint-disable-next-line no-console
@@ -38,6 +39,16 @@ apiClient.interceptors.response.use(
   (error) => {
     // eslint-disable-next-line no-console
     console.error("API Error:", error.response?.status || error.message, error.config?.url);
+    
+    // If this is a CORS error, provide helpful guidance
+    if (error.message && error.message.includes("Network Error")) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "CORS or Network Issue Detected:",
+        "The backend may not be configured to accept requests from this origin.",
+        "This is a backend issue, not a frontend issue."
+      );
+    }
     return Promise.reject(error);
   }
 );
