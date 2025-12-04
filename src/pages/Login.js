@@ -11,6 +11,7 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [apiDebugUrl, setApiDebugUrl] = useState("");
   const { login, user } = useContext(AuthContext);
   const { showToast } = useContext(ToastContext);
   const navigate = useNavigate();
@@ -35,8 +36,7 @@ function Login() {
     return true;
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const doLogin = async () => {
     setError("");
 
     if (!validateForm()) return;
@@ -49,11 +49,10 @@ function Login() {
 
       // Prefer explicit REACT_APP_API_URL when available (avoids proxy/CORS surprises).
       // If REACT_APP_API_URL is set, call the full URL first. Otherwise use relative path (proxy).
-      // eslint-disable-next-line no-console
-      console.log("axios baseURL (before login):", axios.defaults.baseURL, "REACT_APP_API_URL:", process.env.REACT_APP_API_URL);
-
       const apiRoot = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL.replace(/\/$/, "") : "";
       const primaryUrl = apiRoot ? `${apiRoot}/auth/login` : `/auth/login`;
+      setApiDebugUrl(primaryUrl);
+
       let res;
       try {
         // Primary attempt
@@ -67,6 +66,7 @@ function Login() {
           const fallback = `/auth/login`;
           // eslint-disable-next-line no-console
           console.log("Falling back to relative URL:", fallback);
+          setApiDebugUrl(fallback);
           res = await axios.post(fallback, { email, password });
         } else {
           // rethrow for outer catch to handle
@@ -117,6 +117,11 @@ function Login() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    await doLogin();
   };
 
   return (
@@ -172,6 +177,21 @@ function Login() {
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
+
+        {error && (
+          <div style={{ marginTop: 12, padding: 12, borderRadius: 8, background: "#fff7f7", border: "1px solid #f5c6cb" }}>
+            <div style={{ marginBottom: 8, color: "#611a15" }}><strong>Debug</strong></div>
+            <div style={{ fontSize: 13, color: "#611a15", marginBottom: 8 }}>API URL used: <code style={{ background: "#f0f0f0", padding: "2px 6px", borderRadius: 4 }}>{apiDebugUrl || process.env.REACT_APP_API_URL || "(none)"}</code></div>
+            <div>
+              <button onClick={(e) => { e.preventDefault(); doLogin(); }} disabled={loading} style={{ marginRight: 8, padding: "6px 10px" }}>Retry</button>
+              {apiDebugUrl ? (
+                <a href={apiDebugUrl} target="_blank" rel="noreferrer" style={{ color: "#2b6cb0" }}>Open API root</a>
+              ) : (
+                <span style={{ color: "#666" }}>No API URL available to open</span>
+              )}
+            </div>
+          </div>
+        )}
 
         <div className="auth-footer">
           <p>
