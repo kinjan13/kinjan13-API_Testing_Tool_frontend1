@@ -43,7 +43,26 @@ function Login() {
 
     try {
       setLoading(true);
-      const res = await axios.post("/auth/login", { email, password });
+      // Debug: show what baseURL axios is using in runtime
+      // eslint-disable-next-line no-console
+      console.log("axios baseURL (before login):", axios.defaults.baseURL, "REACT_APP_API_URL:", process.env.REACT_APP_API_URL);
+
+      let res;
+      try {
+        res = await axios.post("/auth/login", { email, password });
+      } catch (requestErr) {
+        // If network error, try direct full URL fallback (helps when dev proxy or baseURL misconfigured)
+        // eslint-disable-next-line no-console
+        console.warn("Login request failed first attempt:", requestErr?.message || requestErr);
+        if ((requestErr?.message || "").toLowerCase().includes("network") && process.env.REACT_APP_API_URL) {
+          const fullUrl = `${process.env.REACT_APP_API_URL.replace(/\/$/, "")}/auth/login`;
+          // eslint-disable-next-line no-console
+          console.log("Retrying login against full URL:", fullUrl);
+          res = await axios.post(fullUrl, { email, password });
+        } else {
+          throw requestErr;
+        }
+      }
 
       // Debug: log full response when running locally
       // eslint-disable-next-line no-console
