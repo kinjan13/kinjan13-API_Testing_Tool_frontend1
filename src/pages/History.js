@@ -10,8 +10,29 @@ function History() {
     if (!user) return;
 
     const load = async () => {
-      const res = await axios.get(`/history/get?user_id=${user.id}`);
-      setHistory(res.data);
+      try {
+        const res = await axios.get(`/history/get?user_id=${user.id}`);
+        const data = res.data;
+
+        if (data?.error) {
+          console.error("History load error:", data.message || data);
+          setHistory([]);
+          return;
+        }
+
+        const list = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.data)
+          ? data.data
+          : Array.isArray(data?.history)
+          ? data.history
+          : [];
+
+        setHistory(list);
+      } catch (err) {
+        console.error("Failed to load history:", err);
+        setHistory([]);
+      }
     };
 
     load();

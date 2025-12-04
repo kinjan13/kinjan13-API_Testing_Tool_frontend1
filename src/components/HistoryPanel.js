@@ -9,9 +9,29 @@ function HistoryPanel({ history, setHistory }) {
     const load = async () => {
       if (!user) return;
 
-      const res = await axios.get(`/history/get?user_id=${user.id}`);
+      try {
+        const res = await axios.get(`/history/get?user_id=${user.id}`);
+        const data = res.data;
 
-      setHistory(res.data);
+        if (data?.error) {
+          console.error("HistoryPanel load error:", data.message || data);
+          setHistory([]);
+          return;
+        }
+
+        const list = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.data)
+          ? data.data
+          : Array.isArray(data?.history)
+          ? data.history
+          : [];
+
+        setHistory(list);
+      } catch (err) {
+        console.error("HistoryPanel request failed:", err);
+        setHistory([]);
+      }
     };
     load();
   }, [user, setHistory]);
