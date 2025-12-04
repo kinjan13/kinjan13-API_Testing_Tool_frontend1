@@ -47,32 +47,16 @@ function Login() {
       // eslint-disable-next-line no-console
       console.log("axios baseURL (before login):", axios.defaults.baseURL, "REACT_APP_API_URL:", process.env.REACT_APP_API_URL);
 
-      // Prefer explicit REACT_APP_API_URL when available (avoids proxy/CORS surprises).
-      // If REACT_APP_API_URL is set, call the full URL first. Otherwise use relative path (proxy).
-      const apiRoot = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL.replace(/\/$/, "") : "";
-      const primaryUrl = apiRoot ? `${apiRoot}/auth/login` : `/auth/login`;
-      setApiDebugUrl(primaryUrl);
+      // Always use explicit REACT_APP_API_URL when available (never fallback to relative paths).
+      // This ensures we call the deployed backend directly and avoid CRA proxy issues.
+      const apiRoot = process.env.REACT_APP_API_URL || "http://localhost:5000";
+      const loginUrl = `${apiRoot.replace(/\/$/, "")}/auth/login`;
+      setApiDebugUrl(loginUrl);
 
-      let res;
-      try {
-        // Primary attempt
-        res = await axios.post(primaryUrl, { email, password });
-      } catch (requestErr) {
-        // eslint-disable-next-line no-console
-        console.warn("Login request failed:", requestErr?.message || requestErr);
-        const isNetworkError = (requestErr?.message || "").toLowerCase().includes("network");
-        if (isNetworkError && apiRoot) {
-          // If primary was full URL and failed due to network/CORS, attempt relative path as a fallback (CRA proxy)
-          const fallback = `/auth/login`;
-          // eslint-disable-next-line no-console
-          console.log("Falling back to relative URL:", fallback);
-          setApiDebugUrl(fallback);
-          res = await axios.post(fallback, { email, password });
-        } else {
-          // rethrow for outer catch to handle
-          throw requestErr;
-        }
-      }
+      // eslint-disable-next-line no-console
+      console.log("Sending login request to:", loginUrl);
+
+      const res = await axios.post(loginUrl, { email, password });
 
       // Debug: log full response when running locally
       // eslint-disable-next-line no-console
