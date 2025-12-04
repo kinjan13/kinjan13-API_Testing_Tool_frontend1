@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
+import { ToastContext } from "../context/ToastContext";
 import { useNavigate, Link, Navigate } from "react-router-dom";
 import "../styles/auth.css";
 
@@ -11,6 +12,7 @@ function Login() {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const { login, user } = useContext(AuthContext);
+  const { showToast } = useContext(ToastContext);
   const navigate = useNavigate();
 
   if (user) {
@@ -56,16 +58,18 @@ function Login() {
 
       if (data.error) {
         setError(data.message || "Login failed");
+        showToast(data.message || "Login failed", "error");
         return;
       }
 
       if (!token) {
-        // If login succeeded but no token provided, show helpful message
         setError(data.message || "Login succeeded but no token returned from server");
+        showToast(data.message || "Login succeeded but no token returned", "error");
         return;
       }
 
       login(data.user || data.data?.user || {}, token);
+      showToast("Logged in successfully", "success");
       navigate("/");
     } catch (err) {
       // Better error messages for debugging
@@ -73,6 +77,7 @@ function Login() {
       console.error("Login error:", err.response || err);
       const serverMessage = err.response?.data?.message || err.response?.data || err.message;
       setError(serverMessage || "Login failed. Please try again.");
+      showToast(serverMessage || "Login failed. Please try again.", "error");
     } finally {
       setLoading(false);
     }

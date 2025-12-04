@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate, Link, Navigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import { ToastContext } from "../context/ToastContext";
 import "../styles/auth.css";
 
 function Signup() {
@@ -15,6 +16,7 @@ function Signup() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
+  const { showToast } = useContext(ToastContext);
 
   if (user) {
     return <Navigate to="/" />;
@@ -57,16 +59,17 @@ function Signup() {
 
       if (res.data.error) {
         setError(res.data.message || "Signup failed");
+        showToast(res.data.message || "Signup failed", "error");
         return;
       }
 
       setSuccess("Account created successfully! Redirecting to login...");
+      showToast("Account created successfully", "success");
       setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          "Signup failed. Please try again."
-      );
+      const msg = err.response?.data?.message || "Signup failed. Please try again.";
+      setError(msg);
+      showToast(msg, "error");
     } finally {
       setLoading(false);
     }

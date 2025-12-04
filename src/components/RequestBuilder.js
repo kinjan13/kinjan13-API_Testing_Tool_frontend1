@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import HeaderEditor from "./HeaderEditor";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
+import { ToastContext } from "../context/ToastContext";
 import { beautifyJSON, minifyJSON } from "../utils/jsonTools";
 
 function RequestBuilder({ setApiResponse }) {
@@ -11,6 +12,7 @@ function RequestBuilder({ setApiResponse }) {
   const [headers, setHeaders] = useState([{ key: "", value: "" }]);
   const [loading, setLoading] = useState(false);
   const { user } = useContext(AuthContext);
+  const { showToast } = useContext(ToastContext);
 
   // Auto-fill from localStorage when history entry is selected
   useEffect(() => {
@@ -103,7 +105,8 @@ function RequestBuilder({ setApiResponse }) {
         existing.unshift(entry);
         // keep most recent 50
         localStorage.setItem("local_history", JSON.stringify(existing.slice(0, 50)));
-      } catch {
+        showToast("Request saved to local history", "success");
+      } catch (e) {
         // ignore localStorage errors
       }
 
@@ -115,6 +118,7 @@ function RequestBuilder({ setApiResponse }) {
         }).catch((err) => {
           // eslint-disable-next-line no-console
           console.warn("Failed to save history to backend:", err?.response?.data || err.message);
+          showToast("Failed to save history to server", "error");
         });
       }
     } catch (error) {
@@ -127,6 +131,7 @@ function RequestBuilder({ setApiResponse }) {
             ? "Request timed out"
             : "Network Error: Unable to reach server",
       });
+      showToast("Network Error: Unable to reach server", "error");
     }
 
     setLoading(false); // Stop loading
