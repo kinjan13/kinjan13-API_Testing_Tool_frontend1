@@ -47,19 +47,29 @@ function Login() {
       // eslint-disable-next-line no-console
       console.log("axios baseURL (before login):", axios.defaults.baseURL, "REACT_APP_API_URL:", process.env.REACT_APP_API_URL);
 
+      // Prefer explicit REACT_APP_API_URL when available (avoids proxy/CORS surprises).
+      // If REACT_APP_API_URL is set, call the full URL first. Otherwise use relative path (proxy).
+      // eslint-disable-next-line no-console
+      console.log("axios baseURL (before login):", axios.defaults.baseURL, "REACT_APP_API_URL:", process.env.REACT_APP_API_URL);
+
+      const apiRoot = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL.replace(/\/$/, "") : "";
+      const primaryUrl = apiRoot ? `${apiRoot}/auth/login` : `/auth/login`;
       let res;
       try {
-        res = await axios.post("/auth/login", { email, password });
+        // Primary attempt
+        res = await axios.post(primaryUrl, { email, password });
       } catch (requestErr) {
-        // If network error, try direct full URL fallback (helps when dev proxy or baseURL misconfigured)
         // eslint-disable-next-line no-console
-        console.warn("Login request failed first attempt:", requestErr?.message || requestErr);
-        if ((requestErr?.message || "").toLowerCase().includes("network") && process.env.REACT_APP_API_URL) {
-          const fullUrl = `${process.env.REACT_APP_API_URL.replace(/\/$/, "")}/auth/login`;
+        console.warn("Login request failed:", requestErr?.message || requestErr);
+        const isNetworkError = (requestErr?.message || "").toLowerCase().includes("network");
+        if (isNetworkError && apiRoot) {
+          // If primary was full URL and failed due to network/CORS, attempt relative path as a fallback (CRA proxy)
+          const fallback = `/auth/login`;
           // eslint-disable-next-line no-console
-          console.log("Retrying login against full URL:", fullUrl);
-          res = await axios.post(fullUrl, { email, password });
+          console.log("Falling back to relative URL:", fallback);
+          res = await axios.post(fallback, { email, password });
         } else {
+          // rethrow for outer catch to handle
           throw requestErr;
         }
       }
@@ -95,8 +105,15 @@ function Login() {
       // eslint-disable-next-line no-console
       console.error("Login error:", err.response || err);
       const serverMessage = err.response?.data?.message || err.response?.data || err.message;
-      setError(serverMessage || "Login failed. Please try again.");
-      showToast(serverMessage || "Login failed. Please try again.", "error");
+      // If this was a network / CORS failure, show a clearer message to the user
+      if ((err?.message || "").toLowerCase().includes("network")) {
+        const msg = "Network error: could not reach the API. Check backend availability or CORS settings (see browser console).";
+        setError(msg);
+        showToast(msg, "error");
+      } else {
+        setError(serverMessage || "Login failed. Please try again.");
+        showToast(serverMessage || "Login failed. Please try again.", "error");
+      }
     } finally {
       setLoading(false);
     }
