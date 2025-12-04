@@ -55,7 +55,10 @@ function Signup() {
 
     try {
       setLoading(true);
-      const res = await axios.post("/auth/signup", { email, password });
+      // Use explicit API URL (same pattern as Login.js)
+      const apiRoot = process.env.REACT_APP_API_URL || "http://localhost:5000";
+      const signupUrl = `${apiRoot.replace(/\/$/, "")}/auth/signup`;
+      const res = await axios.post(signupUrl, { email, password });
 
       if (res.data.error) {
         setError(res.data.message || "Signup failed");

@@ -26,14 +26,7 @@ export function AuthProvider({ children }) {
     console.log("AuthProvider initialized", { savedUser: !!savedUser, savedToken: !!savedToken });
   }, []);
 
-  // Set axios baseURL so dev proxy is used (relative URLs), production will use REACT_APP_API_URL
-  useEffect(() => {
-    // Prefer explicit API URL when provided (helps when CRA dev server/proxy isn't running)
-    // Fall back to relative paths if no REACT_APP_API_URL is configured.
-    axios.defaults.baseURL = process.env.REACT_APP_API_URL || "";
-  }, []);
-
-  // Keep axios default Authorization header in sync with token
+  // Set axios default Authorization header in sync with token
   useEffect(() => {
     if (token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -41,6 +34,12 @@ export function AuthProvider({ children }) {
       delete axios.defaults.headers.common["Authorization"];
     }
   }, [token]);
+
+  // Note: baseURL is NOT used for explicit full URLs (which components pass directly).
+  // This is set for any relative-path requests that might be made by other parts of the app.
+  useEffect(() => {
+    axios.defaults.baseURL = process.env.REACT_APP_API_URL || "";
+  }, []);
 
   const login = (userData, token) => {
     setUser(userData);
