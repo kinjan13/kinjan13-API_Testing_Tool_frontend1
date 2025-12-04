@@ -63,9 +63,10 @@ function Signup() {
         return;
       }
 
-      setSuccess("Account created successfully! Redirecting to login...");
-      showToast("Account created successfully", "success");
-      setTimeout(() => navigate("/login"), 2000);
+      // Inform user to confirm their email before logging in
+      setSuccess("Account created successfully! Please confirm your email before logging in.");
+      showToast("Account created. Please confirm your email.", "success");
+      setTimeout(() => navigate("/login"), 3000);
     } catch (err) {
       const msg = err.response?.data?.message || "Signup failed. Please try again.";
       setError(msg);
