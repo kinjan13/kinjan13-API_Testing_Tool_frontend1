@@ -27,7 +27,15 @@ function HistoryPanel({ history, setHistory }) {
           ? data.history
           : [];
 
-        setHistory(list);
+        let local = [];
+        try {
+          local = JSON.parse(localStorage.getItem("local_history") || "[]");
+        } catch {
+          local = [];
+        }
+
+        const merged = [...local, ...list].slice(0, 200);
+        setHistory(merged);
       } catch (err) {
         console.error("HistoryPanel request failed:", err);
         setHistory([]);

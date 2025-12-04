@@ -89,14 +89,32 @@ function RequestBuilder({ setApiResponse }) {
       });
 
       // Save to backend history if user is logged in
+      const entry = {
+        url,
+        method,
+        headers,
+        body,
+        time: new Date().toLocaleString(),
+      };
+
+      // Persist to local history so UI shows history even if backend fails
+      try {
+        const existing = JSON.parse(localStorage.getItem("local_history") || "[]");
+        existing.unshift(entry);
+        // keep most recent 50
+        localStorage.setItem("local_history", JSON.stringify(existing.slice(0, 50)));
+      } catch {
+        // ignore localStorage errors
+      }
+
       if (user) {
-        await axios.post(`/history/save`, {
-          url,
-          method,
-          headers,
-          body,
-          time: new Date().toLocaleString(),
+        // attempt to save to backend but don't block UI
+        axios.post(`/history/save`, {
+          ...entry,
           user_id: user.id,
+        }).catch((err) => {
+          // eslint-disable-next-line no-console
+          console.warn("Failed to save history to backend:", err?.response?.data || err.message);
         });
       }
     } catch (error) {

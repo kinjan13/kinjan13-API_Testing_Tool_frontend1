@@ -28,7 +28,17 @@ function History() {
           ? data.history
           : [];
 
-        setHistory(list);
+        // Merge with local history entries saved while offline
+        let local = [];
+        try {
+          local = JSON.parse(localStorage.getItem("local_history") || "[]");
+        } catch {
+          local = [];
+        }
+
+        // merge with backend list, preferring local recent entries first
+        const merged = [...local, ...list].slice(0, 200);
+        setHistory(merged);
       } catch (err) {
         console.error("Failed to load history:", err);
         setHistory([]);
